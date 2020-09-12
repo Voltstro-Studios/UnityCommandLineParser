@@ -2,6 +2,9 @@
 
 namespace Voltstro.CommandLineParser.TypeReaders
 {
+	/// <summary>
+	/// A default reader for <see cref="float"/>
+	/// </summary>
 	public class FloatReader : ITypeReader
 	{
 		public object ReadType(string input)

@@ -7,6 +7,9 @@ using Voltstro.CommandLineParser.TypeReaders;
 
 namespace Voltstro.CommandLineParser
 {
+	/// <summary>
+	/// The main class for parsing the command line arguments
+	/// </summary>
 	public static class CommandLineParser
 	{
 		private static readonly Dictionary<Type, ITypeReader> TypeReaders = new Dictionary<Type, ITypeReader>
@@ -17,6 +20,11 @@ namespace Voltstro.CommandLineParser
 			[typeof(bool)] = new BoolReader()
 		};
 
+		/// <summary>
+		/// Adds a new, or overrides a TypeReader used for knowing what to set when parsing the arguments
+		/// </summary>
+		/// <param name="type"></param>
+		/// <param name="reader"></param>
 		public static void AddTypeReader(Type type, ITypeReader reader)
 		{
 			if (TypeReaders.ContainsKey(type))
@@ -30,12 +38,20 @@ namespace Voltstro.CommandLineParser
 
 		#region Initialization
 
+		/// <summary>
+		/// Initializes and parses the command line arguments
+		/// <para>This function is automatically called on Subsystem Registration using Unity's <see cref="RuntimeInitializeOnLoadMethodAttribute"/></para>
+		/// </summary>
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
 		public static void Init()
 		{
 			Init(Environment.GetCommandLineArgs());
 		}
 
+		/// <summary>
+		/// Initializes and parses the command line arguments
+		/// </summary>
+		/// <param name="args"></param>
 		public static void Init(string[] args)
 		{
 			Dictionary<string, FieldInfo> argumentProperties = new Dictionary<string, FieldInfo>();

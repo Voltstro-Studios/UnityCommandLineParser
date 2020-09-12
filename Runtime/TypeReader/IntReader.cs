@@ -2,6 +2,9 @@
 
 namespace Voltstro.CommandLineParser.TypeReaders
 {
+	/// <summary>
+	/// A default reader for <see cref="int"/>
+	/// </summary>
 	public class IntReader : ITypeReader
 	{
 		public object ReadType(string input)
