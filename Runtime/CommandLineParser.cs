@@ -8,7 +8,10 @@ public static class CommandLineParser
 {
 	private static Dictionary<Type, ITypeReader> typeReaders = new Dictionary<Type, ITypeReader>
 	{
-		[typeof(string)] = new StringReader()
+		[typeof(string)] = new StringReader(),
+		[typeof(int)] = new IntReader(),
+		[typeof(float)] = new FloatReader(),
+		[typeof(bool)] = new BoolReader()
 	};
 
 	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
