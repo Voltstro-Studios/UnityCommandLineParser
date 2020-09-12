@@ -17,6 +17,19 @@ namespace Voltstro.CommandLineParser
 			[typeof(bool)] = new BoolReader()
 		};
 
+		public static void AddTypeReader(Type type, ITypeReader reader)
+		{
+			if (typeReaders.ContainsKey(type))
+			{
+				typeReaders[type] = reader;
+				return;
+			}
+
+			typeReaders.Add(type, reader);
+		}
+
+		#region Initialization
+
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
 		public static void Init()
 		{
@@ -73,6 +86,7 @@ namespace Voltstro.CommandLineParser
 				i++;
 			}
 		}
-	}
 
+		#endregion
+	}
 }
