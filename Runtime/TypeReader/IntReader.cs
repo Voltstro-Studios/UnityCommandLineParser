@@ -1,12 +1,15 @@
 ﻿using System.Globalization;
 
-public class IntReader : ITypeReader
+namespace Voltstro.CommandLineParser.TypeReaders
 {
-	public object ReadType(string input)
+	public class IntReader : ITypeReader
 	{
-		if (string.IsNullOrWhiteSpace(input))
-			return 0;
+		public object ReadType(string input)
+		{
+			if (string.IsNullOrWhiteSpace(input))
+				return 0;
 
-		return int.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out int result) ? result : 0;
+			return int.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out int result) ? result : 0;
+		}
 	}
 }

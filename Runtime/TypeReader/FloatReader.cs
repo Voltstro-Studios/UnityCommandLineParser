@@ -1,12 +1,17 @@
 ﻿using System.Globalization;
 
-public class FloatReader : ITypeReader
+namespace Voltstro.CommandLineParser.TypeReaders
 {
-	public object ReadType(string input)
+	public class FloatReader : ITypeReader
 	{
-		if (string.IsNullOrWhiteSpace(input))
-			return 0f;
+		public object ReadType(string input)
+		{
+			if (string.IsNullOrWhiteSpace(input))
+				return 0f;
 
-		return float.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out float result) ? result : 0f;
+			return float.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out float result)
+				? result
+				: 0f;
+		}
 	}
 }

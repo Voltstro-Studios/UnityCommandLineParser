@@ -1,4 +1,7 @@
-﻿public interface ITypeReader
+﻿namespace Voltstro.CommandLineParser.TypeReaders
 {
-	object ReadType(string input);
+	public interface ITypeReader
+	{
+		object ReadType(string input);
+	}
 }

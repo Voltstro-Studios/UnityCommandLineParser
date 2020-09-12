@@ -1,22 +1,25 @@
 ﻿using System.Globalization;
 
-public class BoolReader : ITypeReader
+namespace Voltstro.CommandLineParser.TypeReaders
 {
-	public object ReadType(string input)
+	public class BoolReader : ITypeReader
 	{
-		if (string.IsNullOrWhiteSpace(input))
-			return true;
-
-		//Check to see if it is just 'true' or 'false'
-		input = input.ToLower();
-		if(bool.TryParse(input, out bool result))
+		public object ReadType(string input)
 		{
-			return result;
+			if (string.IsNullOrWhiteSpace(input))
+				return true;
+
+			//Check to see if it is just 'true' or 'false'
+			input = input.ToLower();
+			if (bool.TryParse(input, out bool result))
+			{
+				return result;
+			}
+
+			//See if it is just '1' or '0'
+			if (!int.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out int intResult)) return false;
+
+			return intResult == 1;
 		}
-
-		//See if it is just '1' or '0'
-		if (!int.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out int intResult)) return false;
-
-		return intResult == 1;
 	}
 }

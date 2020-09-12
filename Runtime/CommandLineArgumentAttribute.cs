@@ -1,12 +1,15 @@
 ﻿using System;
 
-[AttributeUsage(AttributeTargets.Field)]
-public class CommandLineArgumentAttribute : Attribute
+namespace Voltstro.CommandLineParser
 {
-	public CommandLineArgumentAttribute(string name)
+	[AttributeUsage(AttributeTargets.Field)]
+	public class CommandLineArgumentAttribute : Attribute
 	{
-		Name = name;
-	}
+		public CommandLineArgumentAttribute(string name)
+		{
+			Name = name;
+		}
 
-	public readonly string Name;
+		public readonly string Name;
+	}
 }

@@ -3,71 +3,76 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using Voltstro.CommandLineParser.TypeReaders;
 
-public static class CommandLineParser
+namespace Voltstro.CommandLineParser
 {
-	private static Dictionary<Type, ITypeReader> typeReaders = new Dictionary<Type, ITypeReader>
+	public static class CommandLineParser
 	{
-		[typeof(string)] = new StringReader(),
-		[typeof(int)] = new IntReader(),
-		[typeof(float)] = new FloatReader(),
-		[typeof(bool)] = new BoolReader()
-	};
-
-	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-	public static void Init()
-	{
-		Init(Environment.GetCommandLineArgs());
-	}
-
-	public static void Init(string[] args)
-	{
-		Dictionary<string, FieldInfo> argumentProperties = new Dictionary<string, FieldInfo>();
-
-		//Find any properties with the CommandLineArgument attribute
-		const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-		IEnumerable<FieldInfo> props = AppDomain.CurrentDomain.GetAssemblies()
-			.SelectMany(x => x.GetTypes())
-			.SelectMany(x => x.GetFields(bindingFlags))
-			.Where(x => x.GetCustomAttribute<CommandLineArgumentAttribute>() != null);
-
-		//Go through all found properties and add them to argumentProperties
-		foreach (FieldInfo propertyInfo in props)
+		private static Dictionary<Type, ITypeReader> typeReaders = new Dictionary<Type, ITypeReader>
 		{
-			CommandLineArgumentAttribute attribute = propertyInfo.GetCustomAttribute<CommandLineArgumentAttribute>();
-			if (argumentProperties.ContainsKey(attribute.Name))
-				throw new Exception($"The argument {attribute.Name} has already been defined!");
+			[typeof(string)] = new StringReader(),
+			[typeof(int)] = new IntReader(),
+			[typeof(float)] = new FloatReader(),
+			[typeof(bool)] = new BoolReader()
+		};
 
-			argumentProperties.Add(attribute.Name, propertyInfo);
+		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+		public static void Init()
+		{
+			Init(Environment.GetCommandLineArgs());
 		}
 
-		//Now sort through all the arguments and set the corresponding argument
-		int i = 0;
-		while (i < args.Length)
+		public static void Init(string[] args)
 		{
-			string arg = args[i];
-			if (!arg.StartsWith("-"))
+			Dictionary<string, FieldInfo> argumentProperties = new Dictionary<string, FieldInfo>();
+
+			//Find any properties with the CommandLineArgument attribute
+			const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+			IEnumerable<FieldInfo> props = AppDomain.CurrentDomain.GetAssemblies()
+				.SelectMany(x => x.GetTypes())
+				.SelectMany(x => x.GetFields(bindingFlags))
+				.Where(x => x.GetCustomAttribute<CommandLineArgumentAttribute>() != null);
+
+			//Go through all found properties and add them to argumentProperties
+			foreach (FieldInfo propertyInfo in props)
 			{
-				i++;
-				continue;
+				CommandLineArgumentAttribute attribute = propertyInfo.GetCustomAttribute<CommandLineArgumentAttribute>();
+				if (argumentProperties.ContainsKey(attribute.Name))
+					throw new Exception($"The argument {attribute.Name} has already been defined!");
+
+				argumentProperties.Add(attribute.Name, propertyInfo);
 			}
 
-			string value = null;
-			if (i + 1 < args.Length && !args[i + 1].StartsWith("-"))
+			//Now sort through all the arguments and set the corresponding argument
+			int i = 0;
+			while (i < args.Length)
 			{
-				value = args[i + 1];
-				i++;
-			}
-
-			if (argumentProperties.TryGetValue(arg.Replace("-", ""), out FieldInfo property))
-			{
-				//Handle reading and setting the type
-				if (typeReaders.TryGetValue(property.FieldType, out ITypeReader reader))
+				string arg = args[i];
+				if (!arg.StartsWith("-"))
 				{
-					property.SetValue(property, reader.ReadType(value));
+					i++;
+					continue;
 				}
+
+				string value = null;
+				if (i + 1 < args.Length && !args[i + 1].StartsWith("-"))
+				{
+					value = args[i + 1];
+					i++;
+				}
+
+				if (argumentProperties.TryGetValue(arg.Replace("-", ""), out FieldInfo property))
+				{
+					//Handle reading and setting the type
+					if (typeReaders.TryGetValue(property.FieldType, out ITypeReader reader))
+					{
+						property.SetValue(property, reader.ReadType(value));
+					}
+				}
+				i++;
 			}
-			i++;
 		}
 	}
+
 }

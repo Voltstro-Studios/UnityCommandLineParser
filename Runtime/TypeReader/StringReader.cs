@@ -1,7 +1,10 @@
-﻿public class StringReader : ITypeReader
+﻿namespace Voltstro.CommandLineParser.TypeReaders
 {
-	public object ReadType(string input)
+	public class StringReader : ITypeReader
 	{
-		return input;
+		public object ReadType(string input)
+		{
+			return input;
+		}
 	}
 }
