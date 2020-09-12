@@ -9,7 +9,7 @@ namespace Voltstro.CommandLineParser
 {
 	public static class CommandLineParser
 	{
-		private static Dictionary<Type, ITypeReader> typeReaders = new Dictionary<Type, ITypeReader>
+		private static readonly Dictionary<Type, ITypeReader> TypeReaders = new Dictionary<Type, ITypeReader>
 		{
 			[typeof(string)] = new StringReader(),
 			[typeof(int)] = new IntReader(),
@@ -19,13 +19,13 @@ namespace Voltstro.CommandLineParser
 
 		public static void AddTypeReader(Type type, ITypeReader reader)
 		{
-			if (typeReaders.ContainsKey(type))
+			if (TypeReaders.ContainsKey(type))
 			{
-				typeReaders[type] = reader;
+				TypeReaders[type] = reader;
 				return;
 			}
 
-			typeReaders.Add(type, reader);
+			TypeReaders.Add(type, reader);
 		}
 
 		#region Initialization
@@ -78,7 +78,7 @@ namespace Voltstro.CommandLineParser
 				if (argumentProperties.TryGetValue(arg.Replace("-", ""), out FieldInfo property))
 				{
 					//Handle reading and setting the type
-					if (typeReaders.TryGetValue(property.FieldType, out ITypeReader reader))
+					if (TypeReaders.TryGetValue(property.FieldType, out ITypeReader reader))
 					{
 						property.SetValue(property, reader.ReadType(value));
 					}
