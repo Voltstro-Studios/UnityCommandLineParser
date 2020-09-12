@@ -5,7 +5,7 @@ namespace Voltstro.CommandLineParser.TypeReaders
 	/// <summary>
 	/// A default reader for <see cref="bool"/>
 	/// </summary>
-	public class BoolReader : ITypeReader
+	public sealed class BoolReader : ITypeReader
 	{
 		public object ReadType(string input)
 		{
