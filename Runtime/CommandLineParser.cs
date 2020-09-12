@@ -6,6 +6,11 @@ using UnityEngine;
 
 public static class CommandLineParser
 {
+	private static Dictionary<Type, ITypeReader> typeReaders = new Dictionary<Type, ITypeReader>
+	{
+		[typeof(string)] = new StringReader()
+	};
+
 	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
 	public static void Init()
 	{
@@ -14,17 +19,17 @@ public static class CommandLineParser
 
 	public static void Init(string[] args)
 	{
-		Dictionary<string, PropertyInfo> argumentProperties = new Dictionary<string, PropertyInfo>();
+		Dictionary<string, FieldInfo> argumentProperties = new Dictionary<string, FieldInfo>();
 
 		//Find any properties with the CommandLineArgument attribute
 		const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-		IEnumerable<PropertyInfo> props = AppDomain.CurrentDomain.GetAssemblies()
+		IEnumerable<FieldInfo> props = AppDomain.CurrentDomain.GetAssemblies()
 			.SelectMany(x => x.GetTypes())
-			.SelectMany(x => x.GetProperties(bindingFlags))
+			.SelectMany(x => x.GetFields(bindingFlags))
 			.Where(x => x.GetCustomAttribute<CommandLineArgumentAttribute>() != null);
 
 		//Go through all found properties and add them to argumentProperties
-		foreach (PropertyInfo propertyInfo in props)
+		foreach (FieldInfo propertyInfo in props)
 		{
 			CommandLineArgumentAttribute attribute = propertyInfo.GetCustomAttribute<CommandLineArgumentAttribute>();
 			if (argumentProperties.ContainsKey(attribute.Name))
@@ -51,9 +56,13 @@ public static class CommandLineParser
 				i++;
 			}
 
-			if (argumentProperties.TryGetValue(arg, out PropertyInfo property))
+			if (argumentProperties.TryGetValue(arg.Replace("-", ""), out FieldInfo property))
 			{
-				
+				//Handle reading and setting the type
+				if (typeReaders.TryGetValue(property.FieldType, out ITypeReader reader))
+				{
+					property.SetValue(property, reader.ReadType(value));
+				}
 			}
 			i++;
 		}

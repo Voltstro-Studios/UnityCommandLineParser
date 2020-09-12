@@ -1,6 +1,6 @@
 ﻿using System;
 
-[AttributeUsage(AttributeTargets.Property)]
+[AttributeUsage(AttributeTargets.Field)]
 public class CommandLineArgumentAttribute : Attribute
 {
 	public CommandLineArgumentAttribute(string name)
