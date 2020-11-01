@@ -14,6 +14,9 @@ namespace Voltstro.CommandLineParser
 		/// <param name="name"></param>
 		public CommandLineArgumentAttribute(string name)
 		{
+			if(string.IsNullOrWhiteSpace(name))
+				throw new ArgumentNullException(nameof(name));
+
 			Name = name;
 		}
 
