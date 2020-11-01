@@ -56,21 +56,13 @@ namespace Voltstro.CommandLineParser
 		{
 			Dictionary<string, FieldInfo> argumentProperties = new Dictionary<string, FieldInfo>();
 
-			//Find any properties with the CommandLineArgument attribute
-			const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-			IEnumerable<FieldInfo> props = AppDomain.CurrentDomain.GetAssemblies()
-				.SelectMany(x => x.GetTypes())
-				.SelectMany(x => x.GetFields(bindingFlags))
-				.Where(x => x.GetCustomAttribute<CommandLineArgumentAttribute>() != null);
-
-			//Go through all found properties and add them to argumentProperties
-			foreach (FieldInfo propertyInfo in props)
+			//Go through all found arguments and add them to argumentProperties
+			foreach (KeyValuePair<FieldInfo, CommandLineArgumentAttribute> argument in GetCommandFields())
 			{
-				CommandLineArgumentAttribute attribute = propertyInfo.GetCustomAttribute<CommandLineArgumentAttribute>();
-				if (argumentProperties.ContainsKey(attribute.Name))
-					throw new Exception($"The argument {attribute.Name} has already been defined!");
+				if (argumentProperties.ContainsKey(argument.Value.Name))
+					throw new Exception($"The argument {argument.Value.Name} has already been defined as a argument!");
 
-				argumentProperties.Add(attribute.Name, propertyInfo);
+				argumentProperties.Add(argument.Value.Name, argument.Key);
 			}
 
 			//Now sort through all the arguments and set the corresponding argument
@@ -101,6 +93,16 @@ namespace Voltstro.CommandLineParser
 				}
 				i++;
 			}
+		}
+
+		public static Dictionary<FieldInfo, CommandLineArgumentAttribute> GetCommandFields()
+		{
+			const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+			IEnumerable<FieldInfo> fields = AppDomain.CurrentDomain.GetAssemblies()
+				.SelectMany(x => x.GetTypes())
+				.SelectMany(x => x.GetFields(bindingFlags))
+				.Where(x => x.GetCustomAttribute<CommandLineArgumentAttribute>() != null);
+			return fields.ToDictionary(fieldInfo => fieldInfo, fieldInfo => fieldInfo.GetCustomAttribute<CommandLineArgumentAttribute>());
 		}
 
 		#endregion
