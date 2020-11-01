@@ -25,6 +25,7 @@ namespace Voltstro.CommandLineParser
 		/// </summary>
 		/// <param name="type"></param>
 		/// <param name="reader"></param>
+		/// <exception cref="ArgumentNullException"></exception>
 		public static void AddTypeReader(Type type, ITypeReader reader)
 		{
 			//Make sure our arguments are not null
@@ -49,6 +50,8 @@ namespace Voltstro.CommandLineParser
 		/// Initializes and parses the command line arguments
 		/// <para>This function is automatically called on Subsystem Registration using Unity's <see cref="RuntimeInitializeOnLoadMethodAttribute"/></para>
 		/// </summary>
+		/// <exception cref="ArgumentException"></exception>
+		/// <exception cref="ArgumentNullException"></exception>
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
 		public static void Init()
 		{
@@ -59,6 +62,8 @@ namespace Voltstro.CommandLineParser
 		/// Initializes and parses the command line arguments
 		/// </summary>
 		/// <param name="args"></param>
+		/// <exception cref="ArgumentException"></exception>
+		/// <exception cref="ArgumentNullException"></exception>
 		public static void Init(string[] args)
 		{
 			//Make sure args are not null
