@@ -3,7 +3,7 @@
 namespace Voltstro.CommandLineParser.TypeReaders
 {
 	/// <summary>
-	/// A default reader for <see cref="float"/>
+	///     A default reader for <see cref="float" />
 	/// </summary>
 	public sealed class FloatReader : ITypeReader
 	{

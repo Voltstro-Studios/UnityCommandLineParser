@@ -9,7 +9,7 @@ using Voltstro.CommandLineParser.TypeReaders;
 namespace Voltstro.CommandLineParser
 {
 	/// <summary>
-	/// The main class for parsing the command line arguments
+	///     The main class for parsing command line arguments
 	/// </summary>
 	public static class CommandLineParser
 	{
@@ -22,7 +22,7 @@ namespace Voltstro.CommandLineParser
 		};
 
 		/// <summary>
-		/// Adds a new, or overrides a TypeReader used for knowing what to set when parsing the arguments
+		///     Adds a new, or overrides a TypeReader used for knowing what to set when parsing the arguments
 		/// </summary>
 		/// <param name="type"></param>
 		/// <param name="reader"></param>
@@ -30,9 +30,9 @@ namespace Voltstro.CommandLineParser
 		public static void AddTypeReader([NotNull] Type type, [NotNull] ITypeReader reader)
 		{
 			//Make sure our arguments are not null
-			if(type == null)
+			if (type == null)
 				throw new ArgumentNullException(nameof(type));
-			if(reader == null)
+			if (reader == null)
 				throw new ArgumentNullException(nameof(reader));
 
 			//If the type reader already exists, we override the old one with the one we are adding
@@ -48,8 +48,11 @@ namespace Voltstro.CommandLineParser
 		#region Initialization
 
 		/// <summary>
-		/// Initializes and parses the command line arguments
-		/// <para>This function is automatically called on Subsystem Registration using Unity's <see cref="RuntimeInitializeOnLoadMethodAttribute"/></para>
+		///     Initializes and parses the command line arguments
+		///     <para>
+		///         This function is automatically called on Subsystem Registration using Unity's
+		///         <see cref="RuntimeInitializeOnLoadMethodAttribute" />
+		///     </para>
 		/// </summary>
 		/// <exception cref="ArgumentException"></exception>
 		/// <exception cref="ArgumentNullException"></exception>
@@ -60,7 +63,7 @@ namespace Voltstro.CommandLineParser
 		}
 
 		/// <summary>
-		/// Initializes and parses the command line arguments
+		///     Initializes and parses the command line arguments
 		/// </summary>
 		/// <param name="args"></param>
 		/// <exception cref="ArgumentException"></exception>
@@ -68,7 +71,7 @@ namespace Voltstro.CommandLineParser
 		public static void Init([NotNull] string[] args)
 		{
 			//Make sure args are not null
-			if(args == null)
+			if (args == null)
 				throw new ArgumentNullException(nameof(args));
 
 			Dictionary<string, FieldInfo> argumentProperties = new Dictionary<string, FieldInfo>();
@@ -77,7 +80,9 @@ namespace Voltstro.CommandLineParser
 			foreach (KeyValuePair<FieldInfo, CommandLineArgumentAttribute> argument in GetCommandFields())
 			{
 				if (argumentProperties.ContainsKey(argument.Value.Name))
-					throw new ArgumentException($"The argument {argument.Value.Name} has already been defined as an argument!", nameof(argument.Value.Name));
+					throw new ArgumentException(
+						$"The argument {argument.Value.Name} has already been defined as an argument!",
+						nameof(argument.Value.Name));
 
 				argumentProperties.Add(argument.Value.Name, argument.Key);
 			}
@@ -101,19 +106,15 @@ namespace Voltstro.CommandLineParser
 				}
 
 				if (argumentProperties.TryGetValue(arg.Replace("-", ""), out FieldInfo property))
-				{
 					//Handle reading and setting the type
 					if (TypeReaders.TryGetValue(property.FieldType, out ITypeReader reader))
-					{
 						property.SetValue(property, reader.ReadType(value));
-					}
-				}
 				i++;
 			}
 		}
 
 		/// <summary>
-		/// Gets all fields with the <see cref="CommandLineArgumentAttribute"/> attached
+		///     Gets all fields with the <see cref="CommandLineArgumentAttribute" /> attached
 		/// </summary>
 		/// <returns></returns>
 		public static Dictionary<FieldInfo, CommandLineArgumentAttribute> GetCommandFields()
@@ -123,7 +124,8 @@ namespace Voltstro.CommandLineParser
 				.SelectMany(x => x.GetTypes())
 				.SelectMany(x => x.GetFields(bindingFlags))
 				.Where(x => x.GetCustomAttribute<CommandLineArgumentAttribute>() != null);
-			return fields.ToDictionary(fieldInfo => fieldInfo, fieldInfo => fieldInfo.GetCustomAttribute<CommandLineArgumentAttribute>());
+			return fields.ToDictionary(fieldInfo => fieldInfo,
+				fieldInfo => fieldInfo.GetCustomAttribute<CommandLineArgumentAttribute>());
 		}
 
 		#endregion

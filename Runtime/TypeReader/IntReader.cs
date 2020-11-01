@@ -3,7 +3,7 @@
 namespace Voltstro.CommandLineParser.TypeReaders
 {
 	/// <summary>
-	/// A default reader for <see cref="int"/>
+	///     A default reader for <see cref="int" />
 	/// </summary>
 	public sealed class IntReader : ITypeReader
 	{
