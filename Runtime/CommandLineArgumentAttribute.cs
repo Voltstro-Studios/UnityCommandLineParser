@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 
 namespace Voltstro.CommandLineParser
 {
@@ -12,7 +13,7 @@ namespace Voltstro.CommandLineParser
 		/// Set a field to be set by the command line parser if the argument is supplied
 		/// </summary>
 		/// <param name="name"></param>
-		public CommandLineArgumentAttribute(string name)
+		public CommandLineArgumentAttribute([NotNull] string name)
 		{
 			if(string.IsNullOrWhiteSpace(name))
 				throw new ArgumentNullException(nameof(name));

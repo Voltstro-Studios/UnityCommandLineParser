@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 using UnityEngine;
 using Voltstro.CommandLineParser.TypeReaders;
 
@@ -26,7 +27,7 @@ namespace Voltstro.CommandLineParser
 		/// <param name="type"></param>
 		/// <param name="reader"></param>
 		/// <exception cref="ArgumentNullException"></exception>
-		public static void AddTypeReader(Type type, ITypeReader reader)
+		public static void AddTypeReader([NotNull] Type type, [NotNull] ITypeReader reader)
 		{
 			//Make sure our arguments are not null
 			if(type == null)
@@ -64,7 +65,7 @@ namespace Voltstro.CommandLineParser
 		/// <param name="args"></param>
 		/// <exception cref="ArgumentException"></exception>
 		/// <exception cref="ArgumentNullException"></exception>
-		public static void Init(string[] args)
+		public static void Init([NotNull] string[] args)
 		{
 			//Make sure args are not null
 			if(args == null)
