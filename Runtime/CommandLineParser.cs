@@ -95,6 +95,10 @@ namespace Voltstro.CommandLineParser
 			}
 		}
 
+		/// <summary>
+		/// Gets all fields with the <see cref="CommandLineArgumentAttribute"/> attached
+		/// </summary>
+		/// <returns></returns>
 		public static Dictionary<FieldInfo, CommandLineArgumentAttribute> GetCommandFields()
 		{
 			const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
