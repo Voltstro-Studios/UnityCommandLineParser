@@ -27,6 +27,13 @@ namespace Voltstro.CommandLineParser
 		/// <param name="reader"></param>
 		public static void AddTypeReader(Type type, ITypeReader reader)
 		{
+			//Make sure our arguments are not null
+			if(type == null)
+				throw new ArgumentNullException(nameof(type));
+			if(reader == null)
+				throw new ArgumentNullException(nameof(reader));
+
+			//If the type reader already exists, we override the old one with the one we are adding
 			if (TypeReaders.ContainsKey(type))
 			{
 				TypeReaders[type] = reader;
@@ -54,13 +61,17 @@ namespace Voltstro.CommandLineParser
 		/// <param name="args"></param>
 		public static void Init(string[] args)
 		{
+			//Make sure args are not null
+			if(args == null)
+				throw new ArgumentNullException(nameof(args));
+
 			Dictionary<string, FieldInfo> argumentProperties = new Dictionary<string, FieldInfo>();
 
 			//Go through all found arguments and add them to argumentProperties
 			foreach (KeyValuePair<FieldInfo, CommandLineArgumentAttribute> argument in GetCommandFields())
 			{
 				if (argumentProperties.ContainsKey(argument.Value.Name))
-					throw new Exception($"The argument {argument.Value.Name} has already been defined as a argument!");
+					throw new ArgumentException($"The argument {argument.Value.Name} has already been defined as an argument!", nameof(argument.Value.Name));
 
 				argumentProperties.Add(argument.Value.Name, argument.Key);
 			}
