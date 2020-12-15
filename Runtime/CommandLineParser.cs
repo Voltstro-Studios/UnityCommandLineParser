@@ -105,10 +105,28 @@ namespace Voltstro.CommandLineParser
 					i++;
 				}
 
+				//Handle reading and setting the type
 				if (argumentProperties.TryGetValue(arg.Replace("-", ""), out FieldInfo property))
-					//Handle reading and setting the type
+				{
 					if (TypeReaders.TryGetValue(property.FieldType, out ITypeReader reader))
 						property.SetValue(property, reader.ReadType(value));
+
+					//Handling for enums
+					if (property.FieldType.IsEnum)
+					{
+						if(string.IsNullOrEmpty(value))
+							continue;
+
+						Type baseType = Enum.GetUnderlyingType(property.FieldType);
+						if(!TypeReaders.TryGetValue(baseType, out reader))
+							continue;
+
+						object enumValue = Enum.ToObject(property.FieldType, reader.ReadType(value));
+
+						property.SetValue(property, enumValue);
+					}
+				}
+
 				i++;
 			}
 		}
