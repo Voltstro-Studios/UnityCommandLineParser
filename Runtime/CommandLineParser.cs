@@ -17,6 +17,7 @@ namespace Voltstro.CommandLineParser
 		{
 			[typeof(string)] = new StringReader(),
 			[typeof(int)] = new IntReader(),
+			[typeof(byte)] = new ByteReader(),
 			[typeof(float)] = new FloatReader(),
 			[typeof(bool)] = new BoolReader()
 		};
