@@ -1,3 +1,16 @@
-﻿{
-  "name": "Voltstro.CommandLineParser"
+{
+    "name": "Voltstro.CommandLineParser",
+    "rootNamespace": "",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "McMaster.Extensions.CommandLineUtils.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
+using McMaster.Extensions.CommandLineUtils;
 using UnityEngine;
 using Voltstro.CommandLineParser.TypeReaders;
 
@@ -45,9 +46,9 @@ namespace Voltstro.CommandLineParser
 
 			TypeReaders.Add(type, reader);
 		}
-
+		
 		#region Initialization
-
+		
 		/// <summary>
 		///     Initializes and parses the command line arguments
 		///     <para>
@@ -62,74 +63,58 @@ namespace Voltstro.CommandLineParser
 		{
 			Init(Environment.GetCommandLineArgs());
 		}
-
+		
 		/// <summary>
 		///     Initializes and parses the command line arguments
 		/// </summary>
 		/// <param name="args"></param>
 		/// <exception cref="ArgumentException"></exception>
 		/// <exception cref="ArgumentNullException"></exception>
+		[PublicAPI]
 		public static void Init([NotNull] string[] args)
 		{
 			//Make sure args are not null
 			if (args == null)
 				throw new ArgumentNullException(nameof(args));
 
-			Dictionary<string, FieldInfo> argumentProperties = new Dictionary<string, FieldInfo>();
-
-			//Go through all found arguments and add them to argumentProperties
-			foreach (KeyValuePair<FieldInfo, CommandLineArgumentAttribute> argument in GetCommandFields())
+			CommandLineApplication commandLineApp = new CommandLineApplication
 			{
-				if (argumentProperties.ContainsKey(argument.Value.Name))
-					throw new ArgumentException(
-						$"The argument {argument.Value.Name} has already been defined as an argument!",
-						nameof(argument.Value.Name));
+				UnrecognizedArgumentHandling = UnrecognizedArgumentHandling.CollectAndContinue
+			};
 
-				argumentProperties.Add(argument.Value.Name, argument.Key);
+			//Add all of our commands to commandLineApp
+			Dictionary<CommandOption, FieldInfo> arguments = new Dictionary<CommandOption, FieldInfo>();
+			foreach (KeyValuePair<FieldInfo,CommandLineArgumentAttribute> argument in GetCommandFields())
+			{
+				CommandOption option = commandLineApp.Option($"-{argument.Value.Name} <{argument.Value.Name.ToUpper()}>", argument.Value.Description, CommandOptionType.SingleValue);
+				arguments.Add(option, argument.Key);
 			}
-
-			//Now sort through all the arguments and set the corresponding argument
-			int i = 0;
-			while (i < args.Length)
+			
+			commandLineApp.OnExecute(() =>
 			{
-				string arg = args[i];
-				if (!arg.StartsWith("-"))
+				foreach (KeyValuePair<CommandOption,FieldInfo> argument in arguments)
 				{
-					i++;
-					continue;
-				}
-
-				string value = null;
-				if (i + 1 < args.Length && !args[i + 1].StartsWith("-"))
-				{
-					value = args[i + 1];
-					i++;
-				}
-
-				//Handle reading and setting the type
-				if (argumentProperties.TryGetValue(arg.Replace("-", ""), out FieldInfo property))
-				{
-					if (TypeReaders.TryGetValue(property.FieldType, out ITypeReader reader))
-						property.SetValue(property, reader.ReadType(value));
+					if (TypeReaders.TryGetValue(argument.Value.FieldType, out ITypeReader reader))
+						argument.Value.SetValue(argument.Value, reader.ReadType(argument.Key.Value()));
 
 					//Handling for enums
-					if (property.FieldType.IsEnum)
+					if (argument.Value.FieldType.IsEnum)
 					{
-						if(string.IsNullOrEmpty(value))
+						if(string.IsNullOrEmpty(argument.Key.Value()))
 							continue;
 
-						Type baseType = Enum.GetUnderlyingType(property.FieldType);
+						Type baseType = Enum.GetUnderlyingType(argument.Value.FieldType);
 						if(!TypeReaders.TryGetValue(baseType, out reader))
 							continue;
 
-						object enumValue = Enum.ToObject(property.FieldType, reader.ReadType(value));
-
-						property.SetValue(property, enumValue);
+						object enumValue = Enum.ToObject(argument.Value.FieldType, reader.ReadType(argument.Key.Value()));
+						argument.Value.SetValue(argument.Value, enumValue);
 					}
 				}
+			});
 
-				i++;
-			}
+			//Parse our commands
+			commandLineApp.Execute(args);
 		}
 
 		/// <summary>
