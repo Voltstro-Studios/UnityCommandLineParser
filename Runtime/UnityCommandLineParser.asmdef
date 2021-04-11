@@ -1,6 +1,6 @@
 {
-    "name": "Voltstro.CommandLineParser",
-    "rootNamespace": "",
+    "name": "UnityCommandLineParser",
+    "rootNamespace": "UnityCommandLineParser",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
