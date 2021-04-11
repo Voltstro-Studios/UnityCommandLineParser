@@ -94,15 +94,15 @@ namespace UnityCommandLineParser
 			{
 				foreach (KeyValuePair<CommandOption,FieldInfo> argument in arguments)
 				{
+					if(!argument.Key.HasValue())
+						continue;
+					
 					if (TypeReaders.TryGetValue(argument.Value.FieldType, out ITypeReader reader))
 						argument.Value.SetValue(argument.Value, reader.ReadType(argument.Key.Value()));
 
 					//Handling for enums
 					if (argument.Value.FieldType.IsEnum)
 					{
-						if(string.IsNullOrEmpty(argument.Key.Value()))
-							continue;
-
 						Type baseType = Enum.GetUnderlyingType(argument.Value.FieldType);
 						if(!TypeReaders.TryGetValue(baseType, out reader))
 							continue;
