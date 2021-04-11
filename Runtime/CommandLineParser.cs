@@ -101,7 +101,7 @@ namespace UnityCommandLineParser
 						argument.Value.SetValue(argument.Value, reader.ReadType(argument.Key.Value()));
 
 					//Handling for enums
-					if (argument.Value.FieldType.IsEnum)
+					else if (argument.Value.FieldType.IsEnum)
 					{
 						Type baseType = Enum.GetUnderlyingType(argument.Value.FieldType);
 						if(!TypeReaders.TryGetValue(baseType, out reader))
