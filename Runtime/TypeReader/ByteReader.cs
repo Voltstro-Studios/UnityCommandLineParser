@@ -1,9 +1,9 @@
-﻿namespace Voltstro.CommandLineParser.TypeReaders
+﻿namespace UnityCommandLineParser.TypeReader
 {
 	/// <summary>
 	///     A default reader for <see cref="byte" />
 	/// </summary>
-	public sealed class ByteReader : ITypeReader
+	internal sealed class ByteReader : ITypeReader
 	{
 		public object ReadType(string input)
 		{

@@ -1,4 +1,4 @@
-﻿namespace Voltstro.CommandLineParser.TypeReaders
+﻿namespace UnityCommandLineParser.TypeReader
 {
 	/// <summary>
 	///     The interface for a type reader

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
 using McMaster.Extensions.CommandLineUtils;
+using UnityCommandLineParser.TypeReader;
 using UnityEngine;
-using Voltstro.CommandLineParser.TypeReaders;
 
-namespace Voltstro.CommandLineParser
+namespace UnityCommandLineParser
 {
 	/// <summary>
 	///     The main class for parsing command line arguments

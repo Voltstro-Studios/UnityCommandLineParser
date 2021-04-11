@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace Voltstro.CommandLineParser
+namespace UnityCommandLineParser
 {
 	/// <summary>
 	///     An <see cref="Attribute" /> for making a static field be set when the supplied arguments is provided

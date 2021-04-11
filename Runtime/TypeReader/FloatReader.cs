@@ -1,11 +1,11 @@
 ﻿using System.Globalization;
 
-namespace Voltstro.CommandLineParser.TypeReaders
+namespace UnityCommandLineParser.TypeReader
 {
 	/// <summary>
 	///     A default reader for <see cref="float" />
 	/// </summary>
-	public sealed class FloatReader : ITypeReader
+	internal sealed class FloatReader : ITypeReader
 	{
 		public object ReadType(string input)
 		{

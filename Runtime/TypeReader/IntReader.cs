@@ -1,11 +1,11 @@
 ﻿using System.Globalization;
 
-namespace Voltstro.CommandLineParser.TypeReaders
+namespace UnityCommandLineParser.TypeReader
 {
 	/// <summary>
 	///     A default reader for <see cref="int" />
 	/// </summary>
-	public sealed class IntReader : ITypeReader
+	internal sealed class IntReader : ITypeReader
 	{
 		public object ReadType(string input)
 		{
