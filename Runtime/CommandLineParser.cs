@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
 using McMaster.Extensions.CommandLineUtils;
-using UnityCommandLineParser.TypeReader;
+using McMaster.Extensions.CommandLineUtils.Abstractions;
 using UnityEngine;
 
 namespace UnityCommandLineParser
@@ -14,39 +15,6 @@ namespace UnityCommandLineParser
 	/// </summary>
 	public static class CommandLineParser
 	{
-		private static readonly Dictionary<Type, ITypeReader> TypeReaders = new Dictionary<Type, ITypeReader>
-		{
-			[typeof(string)] = new StringReader(),
-			[typeof(int)] = new IntReader(),
-			[typeof(byte)] = new ByteReader(),
-			[typeof(float)] = new FloatReader(),
-			[typeof(bool)] = new BoolReader()
-		};
-
-		/// <summary>
-		///     Adds a new, or overrides a TypeReader used for knowing what to set when parsing the arguments
-		/// </summary>
-		/// <param name="type"></param>
-		/// <param name="reader"></param>
-		/// <exception cref="ArgumentNullException"></exception>
-		public static void AddTypeReader([NotNull] Type type, [NotNull] ITypeReader reader)
-		{
-			//Make sure our arguments are not null
-			if (type == null)
-				throw new ArgumentNullException(nameof(type));
-			if (reader == null)
-				throw new ArgumentNullException(nameof(reader));
-
-			//If the type reader already exists, we override the old one with the one we are adding
-			if (TypeReaders.ContainsKey(type))
-			{
-				TypeReaders[type] = reader;
-				return;
-			}
-
-			TypeReaders.Add(type, reader);
-		}
-		
 		#region Initialization
 		
 		/// <summary>
@@ -58,7 +26,9 @@ namespace UnityCommandLineParser
 		/// </summary>
 		/// <exception cref="ArgumentException"></exception>
 		/// <exception cref="ArgumentNullException"></exception>
+#if !CLP_NO_AUTO_PARSE
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+#endif
 		public static void Init()
 		{
 			Init(Environment.GetCommandLineArgs());
@@ -95,9 +65,10 @@ namespace UnityCommandLineParser
 			foreach (KeyValuePair<MethodInfo,CommandLineCommandAttribute> command in GetCommandLineCommands())
 			{
 				//Create command action
-				Action action = null;
+				Action action;
 				try
 				{
+					//TODO: Implement ILogger
 					action = (Action) Delegate.CreateDelegate(typeof(Action), command.Key);
 				}
 				catch (Exception)
@@ -118,19 +89,31 @@ namespace UnityCommandLineParser
 					if(!argument.Key.HasValue())
 						continue;
 					
-					if (TypeReaders.TryGetValue(argument.Value.FieldType, out ITypeReader reader))
-						argument.Value.SetValue(argument.Value, reader.ReadType(argument.Key.Value()));
-
-					//Handling for enums
-					else if (argument.Value.FieldType.IsEnum)
+					IValueParser parser = commandLineApp.ValueParsers.GetParser(argument.Value.FieldType);
+					object parsedValue;
+					try
 					{
-						Type baseType = Enum.GetUnderlyingType(argument.Value.FieldType);
-						if(!TypeReaders.TryGetValue(baseType, out reader))
-							continue;
-
-						object enumValue = Enum.ToObject(argument.Value.FieldType, reader.ReadType(argument.Key.Value()));
-						argument.Value.SetValue(argument.Value, enumValue);
+						parsedValue = parser.Parse("", argument.Key.Value(), CultureInfo.CurrentCulture);
 					}
+					catch (FormatException)
+					{
+						//TODO: Implement ILogger
+						continue;
+					}
+
+					//Probs failed to parse
+					if(parsedValue == null)
+						continue;
+					
+					//Handling for enums
+					if (argument.Value.FieldType.IsEnum)
+					{
+						object enumValue = Enum.ToObject(argument.Value.FieldType, parsedValue);
+						argument.Value.SetValue(argument.Value, enumValue);
+						continue;
+					}
+					
+					argument.Value.SetValue(argument.Value, parsedValue);
 				}
 				
 				//Parse all commands
