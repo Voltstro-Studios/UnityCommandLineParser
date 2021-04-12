@@ -15,6 +15,15 @@ namespace UnityCommandLineParser
 	/// </summary>
 	public static class CommandLineParser
 	{
+		private static ILogger logger;
+		private const string LOGTag = "[CLP]";
+
+		public static ILogger Logger
+		{
+			get => logger;
+			set => logger = value ?? throw new ArgumentNullException(nameof(value));
+		}
+		
 		#region Initialization
 		
 		/// <summary>
@@ -47,6 +56,9 @@ namespace UnityCommandLineParser
 			if (args == null)
 				throw new ArgumentNullException(nameof(args));
 
+			//If a logger hasn't been added then just use the default Unity one
+			logger ??= Debug.unityLogger;
+
 			CommandLineApplication commandLineApp = new CommandLineApplication
 			{
 				UnrecognizedArgumentHandling = UnrecognizedArgumentHandling.CollectAndContinue
@@ -68,11 +80,11 @@ namespace UnityCommandLineParser
 				Action action;
 				try
 				{
-					//TODO: Implement ILogger
 					action = (Action) Delegate.CreateDelegate(typeof(Action), command.Key);
 				}
 				catch (Exception)
 				{
+					logger.LogError(LOGTag, $"{command.Key.Name} is an invalid method! It must have no arguments and be a void!");
 					continue;
 				}
 				
@@ -93,8 +105,11 @@ namespace UnityCommandLineParser
 					
 					//Epic fail ReSharper, because guess what, it can be null!
 					// ReSharper disable once ConditionIsAlwaysTrueOrFalse
-					if(parser == null)
-						continue; //TODO: Log error with ILogger
+					if (parser == null)
+					{
+						logger.LogError(LOGTag, $"Unsupported base type '{argument.Value.FieldType.FullName}'!");
+						continue;
+					}
 					
 					object parsedValue;
 					try
@@ -103,7 +118,7 @@ namespace UnityCommandLineParser
 					}
 					catch (FormatException)
 					{
-						//TODO: Implement ILogger
+						logger.LogError(LOGTag, $"Failed to parse {argument.Key.ShortName}!");
 						continue;
 					}
 
@@ -130,9 +145,9 @@ namespace UnityCommandLineParser
 					{
 						command.Value.Invoke();
 					}
-					catch (Exception)
+					catch (Exception ex)
 					{
-						// ignored
+						logger.LogException(ex);
 					}
 				}
 			});
