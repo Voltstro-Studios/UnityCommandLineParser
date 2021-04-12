@@ -90,6 +90,12 @@ namespace UnityCommandLineParser
 						continue;
 					
 					IValueParser parser = commandLineApp.ValueParsers.GetParser(argument.Value.FieldType);
+					
+					//Epic fail ReSharper, because guess what, it can be null!
+					// ReSharper disable once ConditionIsAlwaysTrueOrFalse
+					if(parser == null)
+						continue; //TODO: Log error with ILogger
+					
 					object parsedValue;
 					try
 					{
