@@ -11,16 +11,6 @@ namespace UnityCommandLineParser
     public class CommandLineCommandAttribute : Attribute
     {
         /// <summary>
-        ///     What argument is this using
-        /// </summary>
-        public string Name { get; }
-        
-        /// <summary>
-        ///     The description of this argument
-        /// </summary>
-        public string Description { get; }
-
-        /// <summary>
         ///     Marks a method to be called if the argument is provided
         /// </summary>
         /// <param name="name"></param>
@@ -33,7 +23,7 @@ namespace UnityCommandLineParser
             Name = name;
             Description = "";
         }
-        
+
         /// <summary>
         ///     Marks a method to be called if the argument is provided
         /// </summary>
@@ -51,5 +41,15 @@ namespace UnityCommandLineParser
             Name = name;
             Description = description;
         }
+
+        /// <summary>
+        ///     What argument is this using
+        /// </summary>
+        public string Name { get; }
+
+        /// <summary>
+        ///     The description of this argument
+        /// </summary>
+        public string Description { get; }
     }
 }
