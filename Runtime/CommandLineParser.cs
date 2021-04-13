@@ -11,13 +11,17 @@ using UnityEngine;
 namespace UnityCommandLineParser
 {
 	/// <summary>
-	///     The main class for parsing command line arguments
+	///     A command line parser designed for Unity
 	/// </summary>
 	public static class CommandLineParser
 	{
 		private static ILogger logger;
 		private const string LOGTag = "[CLP]";
 
+		/// <summary>
+		///		The <see cref="ILogger"/> that <see cref="CommandLineParser"/> will use
+		/// </summary>
+		/// <exception cref="ArgumentNullException"></exception>
 		public static ILogger Logger
 		{
 			get => logger;

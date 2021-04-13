@@ -10,9 +10,21 @@ namespace UnityCommandLineParser
     [PublicAPI]
     public class CommandLineCommandAttribute : Attribute
     {
+        /// <summary>
+        ///     What argument is this using
+        /// </summary>
         public string Name { get; }
+        
+        /// <summary>
+        ///     The description of this argument
+        /// </summary>
         public string Description { get; }
 
+        /// <summary>
+        ///     Marks a method to be called if the argument is provided
+        /// </summary>
+        /// <param name="name"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public CommandLineCommandAttribute([NotNull] string name)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -22,6 +34,12 @@ namespace UnityCommandLineParser
             Description = "";
         }
         
+        /// <summary>
+        ///     Marks a method to be called if the argument is provided
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="description"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public CommandLineCommandAttribute([NotNull] string name, [NotNull] string description)
         {
             if (string.IsNullOrWhiteSpace(name))

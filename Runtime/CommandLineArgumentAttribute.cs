@@ -21,7 +21,7 @@ namespace UnityCommandLineParser
 		public string Description { get;  }
 
 		/// <summary>
-		///     Set a field to be set by the command line parser if the argument is supplied
+		///     Marks a field to be set by the command line parser if the argument is supplied
 		/// </summary>
 		/// <param name="name"></param>
 		public CommandLineArgumentAttribute([NotNull] string name)
@@ -34,7 +34,7 @@ namespace UnityCommandLineParser
 		}
 
 		/// <summary>
-		///     Set a field to be set by the command line parser if the argument is supplied
+		///     Marks a field to be set by the command line parser if the argument is supplied
 		/// </summary>
 		/// <param name="name"></param>
 		/// <param name="description"></param>
