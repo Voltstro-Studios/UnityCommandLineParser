@@ -63,7 +63,7 @@ namespace UnityCommandLineParser
             //If a logger hasn't been added then just use the default Unity one
             logger ??= Debug.unityLogger;
 
-            CommandLineApplication commandLineApp = new CommandLineApplication
+            CommandLineApplication commandLineApp = new CommandLineApplication(new HelpTextGenerator(), new Console(), Environment.CurrentDirectory)
             {
                 UnrecognizedArgumentHandling = UnrecognizedArgumentHandling.CollectAndContinue
             };
