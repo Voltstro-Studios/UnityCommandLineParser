@@ -6,8 +6,8 @@ CommandLineUtils
 https://github.com/natemcmaster/CommandLineUtils
 ================================================================================
 
-Copyright © .NET Foundation and Contributors
-Copyright © Nate McMaster
+Copyright (c) .NET Foundation and Contributors
+Copyright (c) Nate McMaster
 
 All rights reserved.
 

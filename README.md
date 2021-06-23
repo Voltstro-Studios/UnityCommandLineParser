@@ -22,12 +22,11 @@ This project uses [McMaster.Extensions.CommandLineUtils](https://github.com/nate
 Unity 2020.3.x
 ```
 
-To install it via the package manager you will need to:
-
-1. Open up the package manager via Windows -> Package Manager
-2. Click on the little + sign -> Add package from git URL...
-3. Type https://github.com/Voltstro-Studios/UnityCommandLineParser.git and add it
-4. Unity will now download and install the package
+1. Setup [UnityNuGet](https://github.com/xoofx/UnityNuGet#unitynuget-)
+2. Open up the package manager via Windows -> Package Manager
+3. Click on the little + sign -> Add package from git URL...
+4. Type `https://github.com/Voltstro-Studios/UnityCommandLineParser.git` and add it
+5. Unity will now download and install the package
 
 ## Usage
 
@@ -55,7 +54,7 @@ If this example was to be run with the commands: `./UnityPlayer -fps 420 -name "
 
 # Authors
 
-**Voltstro** - *Inital Work* - [Voltstro](https://github.com/Voltstro)
+**Voltstro** - *Initial Work* - [Voltstro](https://github.com/Voltstro)
 
 # License
 
