@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Voltstro-Studios")]
 [assembly: AssemblyProduct("Unity Command Line Parser")]
-[assembly: AssemblyCopyright("Copyright © 2020-2021 Voltstro-Studios")]
+[assembly: AssemblyCopyright("Copyright © 2020-2022 Voltstro-Studios")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
