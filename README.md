@@ -4,7 +4,7 @@
 [![Discord](https://img.shields.io/badge/Discord-Voltstro-7289da.svg?logo=discord)](https://discord.voltstro.dev) 
 [![YouTube](https://img.shields.io/badge/Youtube-Voltstro-red.svg?logo=youtube)](https://www.youtube.com/Voltstro)
 
-A command line parser designed for Unity.
+A command line parser for Unity.
 
 One of the issues that plague most C# command line parsers is that they are designed to be run from `Program.Main(string[] args);` and basically take over as the entry point of your C# app. However, Unity doesn't have the standard C# entry point. So we created this project, a command line parser for Unity that is easy to use.
 
@@ -19,56 +19,51 @@ This project uses [McMaster.Extensions.CommandLineUtils](https://github.com/nate
 
 ### Package Installation
 
-### Prerequisites
+#### Prerequisites
 
 ```
 Unity 2020.3.x
 ```
 
-[UnityNuGet](https://github.com/xoofx/UnityNuGet#unitynuget-) **MUST** be configured, as this project uses McMaster.Extensions.CommandLineUtils, which is a NuGet package.
+### Installation Methods
 
-### Voltstro-Studios UPM
+There are three main sources on how you can install this package. Pick which ever one suites you the best!
 
-You can install this package from our Azure UPM. Using a scoped registry will make updating a lot easier.
+#### Voltstro UPM
 
-To add the registry, simply goto Edit -> Project Settings -> Package Manager, and add it to 'Scoped Registries' like so:
+You can install this package from our custom UPM registry. To setup our registry, see [here](https://github.com/Voltstro/VoltstroUPM#setup).
 
-![Registry](https://user-images.githubusercontent.com/45032877/148951575-e962ed43-70bd-4eff-a8ce-5888cf0a9318.png)
+Once you have the registry added to your project, you can install it like any other package via the package manager.
 
-Or add it via your project's `manifest.json` file:
+#### OpenUPM
 
-```json
-{
-    "scopedRegistries": [
-        {
-          "name": "Voltstro-Studios UPM",
-          "url": "https://pkgs.dev.azure.com/Voltstro-Studios/UnityPackages/_packaging/UPM/npm/registry",
-          "scopes": [
-            "dev.voltstro"
-          ]
-        }
-      ]
-}
+You can install this package via [OpenUPM](https://openupm.com/).
+
+To install it, use their CLI:
+
+```bash
+openupm-cli add dev.voltstro.unitycommandlineparser
 ```
 
-It will then appear in your package manage under 'My Registries', you can install it like any other Unity package.
+#### Git
 
-![UPM](Media~/PackageManager.png)
+To install it via the package manager with git you will need to:
 
-### Git
+1. Setup [UnityNuGet](https://github.com/xoofx/UnityNuGet#unitynuget-)
+2. Open up the package manager via Windows **->** Package Manager
+3. Click on the little + sign **->** Add package from git URL...
+4. Type `https://github.com/Voltstro-Studios/UnityCommandLineParser.git` and add it
+5. Unity will now download and install the package
 
-1. Open up the package manager via Windows -> Package Manager
-2. Click on the little + sign -> Add package from git URL...
-3. Type `https://github.com/Voltstro-Studios/UnityCommandLineParser.git` and add it
-4. Unity will now download and install the package
+Please note that you will have to manually check for updates, and replace the hash (or tag version) in your project's `packages-lock.json` file.
 
-## Usage
+### Usage
 
 Mark a static field with a `[CommandLineArgument]` attribute to be able to be set as a command line argument.
 
 Or you can mark a static method with a `[CommandLineCommand]` attribute to be able to run a method as a command line argument.
 
-### Examples
+#### Examples
 
 ```csharp
 [CommandLineArgument("name", "Sets the name of the player")]

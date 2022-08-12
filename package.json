@@ -1,9 +1,14 @@
 {
   "name": "dev.voltstro.unitycommandlineparser",
   "displayName": "Unity Command Line Parser",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "unity": "2020.3",
   "description": "A command line parser designed for Unity.",
+  "keywords": [
+    "commandline",
+    "arguments",
+    "parser"
+  ],
   "author": {
     "name": "Voltstro",
     "email": "me@voltstro.dev",
@@ -13,8 +18,8 @@
     "type": "git",
     "url": "https://github.com/Voltstro-Studios/UnityCommandLineParser.git"
   },
-  "type": "tool",
+  "type": "library",
   "dependencies": {
-    "org.nuget.mcmaster.extensions.commandlineutils": "4.0.0"
+    "org.nuget.mcmaster.extensions.commandlineutils": "4.0.1"
   }
 }
